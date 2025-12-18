@@ -1,0 +1,42 @@
+[
+  {
+    "tx_hash": "0xswap1",
+    "block_timestamp": "2024-05-14T12:00:00.000Z",
+    "category": "swap",
+    "token_in": "USDC",
+    "amount_in": "1500",
+    "token_out": "WBTC",
+    "amount_out": "0.025",
+    "usd_value": 1500,
+    "protocol_name": "Uniswap V3",
+    "direction": "send"
+  },
+  {
+    "hash": "0xtransfer1",
+    "block_timestamp": "2024-05-13T09:00:00.000Z",
+    "category": "transfer",
+    "asset": "ETH",
+    "amount": "0.5",
+    "usd_value": 1600,
+    "direction": "receive"
+  },
+  {
+    "transaction_hash": "0xapprove1",
+    "block_timestamp": "2024-05-12T00:00:00.000Z",
+    "category": "approve",
+    "asset": "USDC",
+    "amount": "0"
+  },
+  {
+    "hash": "0xswap2",
+    "block_timestamp": "2024-05-11T00:00:00.000Z",
+    "category": "swap",
+    "token_in": "WBTC",
+    "amount_in": "0.01",
+    "token_out": "USDC",
+    "amount_out": "600",
+    "usd_value": 600,
+    "protocol_name": "Balancer",
+    "direction": "send"
+  }
+]

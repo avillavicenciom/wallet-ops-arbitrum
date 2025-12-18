@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+.env
+.env.local
+npm-debug.log*
+.pnpm-debug.log*
+.next
+out
+dist
+coverage
