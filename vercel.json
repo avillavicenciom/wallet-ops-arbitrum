@@ -1,10 +1,16 @@
 {
   "version": 2,
   "builds": [
-    { "src": "apps/api/src/server.ts", "use": "@vercel/node" }
+    {
+      "src": "apps/api/src/server.ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["packages/core/src/**"]
+      }
+    }
   ],
   "routes": [
-    { "src": "/history", "dest": "apps/api/src/server.ts" },
-    { "src": "/", "dest": "apps/api/src/server.ts" }
+    { "src": "/(.*)", "dest": "apps/api/src/server.ts" }
   ]
 }
+
