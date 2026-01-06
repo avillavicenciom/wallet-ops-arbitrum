@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { normalizeTransactions, RawMoralisTransaction } from '@wallet-ops-arbitrum/core';
+import { normalizeTransactions, RawMoralisTransaction } from '../../packages/core/src';
+
 
 dotenv.config();
 
