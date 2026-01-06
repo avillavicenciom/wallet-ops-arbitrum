@@ -8,6 +8,10 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
+app.use(express.json());
+
+// Healthcheck
+app.get('/', (_req, res) => res.status(200).send('OK'));
 
 const MORALIS_BASE_URL = 'https://deep-index.moralis.io/api/v2.2';
 const CACHE_TTL_MS = 60_000;
@@ -49,9 +53,7 @@ app.get('/history', async (req, res) => {
   try {
     const url = `${MORALIS_BASE_URL}/wallets/${address}/history`;
     const response = await axios.get(url, {
-      headers: {
-        'X-API-Key': apiKey
-      },
+      headers: { 'X-API-Key': apiKey },
       params: {
         chain: 'arbitrum',
         cursor
@@ -81,7 +83,5 @@ app.get('/history', async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`API listening on http://localhost:${port}`);
-});
+// ✅ IMPORTANT for Vercel: export the Express app (no app.listen)
+export default app;
