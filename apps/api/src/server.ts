@@ -4,17 +4,10 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { normalizeTransactions, RawMoralisTransaction } from '@wallet-ops-arbitrum/core';
 
-
-
-
 dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.json());
-
-// Healthcheck
-app.get('/', (_req, res) => res.status(200).send('OK'));
 
 const MORALIS_BASE_URL = 'https://deep-index.moralis.io/api/v2.2';
 const CACHE_TTL_MS = 60_000;
@@ -34,6 +27,11 @@ const storeInCache = (key: string, payload: unknown) => {
   cache.set(key, { timestamp: Date.now(), payload });
 };
 
+// Endpoint de salud para probar rápido
+app.get('/', (_req, res) => {
+  res.status(200).json({ ok: true, service: 'wallet-ops-arbitrum-api' });
+});
+
 app.get('/history', async (req, res) => {
   const address = String(req.query.address || '').trim();
   const cursor = (req.query.cursor as string | undefined) || undefined;
@@ -49,18 +47,13 @@ app.get('/history', async (req, res) => {
 
   const cacheKey = buildCacheKey(address, cursor);
   const cached = getFromCache(cacheKey);
-  if (cached) {
-    return res.json({ ...((cached as object) || {}) });
-  }
+  if (cached) return res.json({ ...((cached as object) || {}) });
 
   try {
     const url = `${MORALIS_BASE_URL}/wallets/${address}/history`;
     const response = await axios.get(url, {
       headers: { 'X-API-Key': apiKey },
-      params: {
-        chain: 'arbitrum',
-        cursor
-      }
+      params: { chain: 'arbitrum', cursor }
     });
 
     const rawTxs: RawMoralisTransaction[] =
@@ -77,7 +70,6 @@ app.get('/history', async (req, res) => {
     };
 
     storeInCache(cacheKey, payload);
-
     return res.json(payload);
   } catch (error: unknown) {
     console.error('Failed to fetch history', error);
@@ -86,5 +78,11 @@ app.get('/history', async (req, res) => {
   }
 });
 
-// ✅ IMPORTANT for Vercel: export the Express app (no app.listen)
+// ✅ En Vercel Serverless: exporta el handler
 export default app;
+
+// ✅ Solo si lo ejecutas local (node dist/server.js)
+if (process.env.NODE_ENV !== 'production' && process.env.VERCEL !== '1') {
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => console.log(`API listening on http://localhost:${port}`));
+}
